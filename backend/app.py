@@ -6,14 +6,10 @@ Main application file with API endpoints
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-import sys
 from datetime import datetime
 
-# Add current directory to path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from model import DeliveryDelayModel, train_initial_model
-from utils import (
+from .model import DeliveryDelayModel, train_initial_model
+from .utils import (
     DataProcessor, PredictionProcessor, WeatherAPIClient,
     TrafficAPIClient, TimeCalculator, validate_input
 )

@@ -3,14 +3,11 @@ WSGI entry point for production deployment on Render
 This module exports the Flask app for gunicorn to use
 """
 
-import sys
 import os
+import sys
 
-# Add backend directory to Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'backend'))
-
-# Import the Flask app from backend/app.py
-from app import app
+# Import the Flask app from backend.app module
+from backend.app import app
 
 # For development - don't use in production (gunicorn handles this)
 if __name__ == '__main__':
