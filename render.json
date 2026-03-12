@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/render.json5",
+  "services": [
+    {
+      "type": "web",
+      "name": "ai-delivery-backend",
+      "runtime": "python",
+      "plan": "free",
+      "startCommand": "gunicorn --worker-class sync --workers 2 --timeout 60 --bind 0.0.0.0:$PORT wsgi:app",
+      "buildCommand": "pip install --upgrade pip && pip install -r requirements.txt",
+      "envVars": [
+        {
+          "key": "FLASK_ENV",
+          "value": "production"
+        },
+        {
+          "key": "PYTHONUNBUFFERED",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "type": "static",
+      "name": "ai-delivery-frontend", 
+      "staticPublishPath": "./frontend",
+      "routes": [
+        {
+          "path": "/",
+          "target": "/index.html"
+        }
+      ]
+    }
+  ]
+}
