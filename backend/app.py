@@ -3,7 +3,7 @@ AI Delivery Delay Prediction System - Flask Backend
 Main application file with API endpoints
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, render_template_string
 from flask_cors import CORS
 import os
 from datetime import datetime
@@ -14,8 +14,8 @@ from .utils import (
     TrafficAPIClient, TimeCalculator, validate_input
 )
 
-# Initialize Flask app
-app = Flask(__name__)
+# Initialize Flask app with static files configuration
+app = Flask(__name__, static_folder='../frontend', static_url_path='/static')
 CORS(app)
 
 # Initialize model
@@ -33,17 +33,84 @@ print("[✓] Application initialized successfully")
 
 
 # ============================================
-# HEALTH CHECK ENDPOINT
+# ROOT ENDPOINT - Serve Frontend
 # ============================================
 
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """Check API health"""
+@app.route('/', methods=['GET'])
+def index():
+    """Serve the frontend index.html"""
+    try:
+        frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'index.html')
+        if os.path.exists(frontend_path):
+            with open(frontend_path, 'r', encoding='utf-8') as f:
+                return f.read()
+    except Exception as e:
+        print(f"[!] Error serving index.html: {e}")
+    
+    # Fallback response
     return jsonify({
-        'status': 'healthy',
-        'timestamp': datetime.now().isoformat(),
+        'status': 'ok',
+        'message': 'API Server Running',
         'version': '1.0.0'
     }), 200
+
+
+# ============================================
+# STATIC FILES SERVING
+# ============================================
+
+@app.route('/css/<path:filename>')
+def serve_css(filename):
+    """Serve CSS files"""
+    try:
+        frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'css')
+        return send_from_directory(frontend_path, filename)
+    except Exception as e:
+        print(f"[!] Error serving CSS file {filename}: {e}")
+        return '', 404
+
+
+@app.route('/js/<path:filename>')
+def serve_js(filename):
+    """Serve JavaScript files"""
+    try:
+        frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'js')
+        return send_from_directory(frontend_path, filename)
+    except Exception as e:
+        print(f"[!] Error serving JS file {filename}: {e}")
+        return '', 404
+
+
+@app.route('/images/<path:filename>')
+def serve_images(filename):
+    """Serve image files"""
+    try:
+        frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'images')
+        return send_from_directory(frontend_path, filename)
+    except Exception as e:
+        print(f"[!] Error serving image file {filename}: {e}")
+        return '', 404
+
+
+@app.route('/<filename>')
+def serve_html_files(filename):
+    """Serve HTML files from frontend"""
+    try:
+        if filename.endswith('.html'):
+            frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', filename)
+            if os.path.exists(frontend_path):
+                with open(frontend_path, 'r', encoding='utf-8') as f:
+                    return f.read(), 200, {'Content-Type': 'text/html; charset=utf-8'}
+    except Exception as e:
+        print(f"[!] Error serving HTML file {filename}: {e}")
+    
+    # If file not found, return 404
+    return '', 404
+
+
+# ============================================
+# HEALTH CHECK ENDPOINT
+# ============================================
 
 
 # ============================================
@@ -343,8 +410,21 @@ def monitor():
 
 @app.errorhandler(404)
 def not_found(error):
-    """Handle 404 errors"""
-    return jsonify({'error': 'Endpoint not found'}), 404
+    """Handle 404 errors - serve index.html for SPA routes"""
+    # For API endpoints that don't exist
+    if request.path.startswith('/api/'):
+        return jsonify({'error': 'Endpoint not found'}), 404
+    
+    # For other routes, try to serve index.html (single-page app)
+    try:
+        frontend_path = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'index.html')
+        if os.path.exists(frontend_path):
+            with open(frontend_path, 'r', encoding='utf-8') as f:
+                return f.read()
+    except Exception as e:
+        print(f"[!] Error serving index.html: {e}")
+    
+    return jsonify({'error': 'Not found'}), 404
 
 
 @app.errorhandler(500)
