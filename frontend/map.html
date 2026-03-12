@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Delivery Tracking</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>DeliveryAI</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="prediction.html" class="nav-link">Predict</a>
+                <a href="map.html" class="nav-link active">Track</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="map-container-full">
+        <!-- Map -->
+        <div id="mapElement" class="map-element"></div>
+
+        <!-- Tracking Panel -->
+        <div class="tracking-panel">
+            <!-- Delivery Info -->
+            <div class="panel-section delivery-info">
+                <h2>Active Delivery</h2>
+                <div class="delivery-header">
+                    <div class="delivery-status on-time">
+                        <span class="status-dot"></span>
+                        <span class="status-text">On Track</span>
+                    </div>
+                    <div class="delivery-id">
+                        <small>Order ID</small>
+                        <p>#DEL-2026-001</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Route Details -->
+            <div class="panel-section">
+                <h3>Route Details</h3>
+                <div class="route-detail">
+                    <div class="route-point origin">
+                        <i class="fas fa-circle"></i>
+                        <div class="point-info">
+                            <p class="point-label">Origin</p>
+                            <p class="point-address">Warehouse A, Downtown</p>
+                            <small>Pickup: 09:00 AM</small>
+                        </div>
+                    </div>
+                    <div class="route-line"></div>
+                    <div class="route-point destination">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="point-info">
+                            <p class="point-label">Destination</p>
+                            <p class="point-address">Customer Address, Uptown</p>
+                            <small>Estimated: 02:30 PM</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Stats -->
+            <div class="panel-section stats">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-ruler"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">Distance</p>
+                        <p class="stat-value" id="trackDistance">-- km</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">Speed</p>
+                        <p class="stat-value" id="trackSpeed">-- km/h</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-hourglass"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">ETA</p>
+                        <p class="stat-value" id="trackETA">--:-- --</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delay Prediction -->
+            <div class="panel-section delay-alert" id="delayAlert">
+                <h3 style="margin-top: 0;">
+                    <i class="fas fa-info-circle"></i> Delay Prediction
+                </h3>
+                <div class="prediction-box on-time">
+                    <p class="prediction-label">Risk Level</p>
+                    <p class="prediction-value" id="trackDelayRisk">Low</p>
+                    <small id="trackDelayMessage">Expected delivery on time</small>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="panel-section actions">
+                <button class="btn btn-primary btn-full" onclick="window.location.href='prediction.html'">
+                    <i class="fas fa-plus"></i> New Prediction
+                </button>
+                <button class="btn btn-secondary btn-full" onclick="toggleTracking()">
+                    <i class="fas fa-pause"></i> Pause Tracking
+                </button>
+            </div>
+
+            <!-- Collapse Button -->
+            <button class="panel-collapse" onclick="togglePanel()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Updates Toast -->
+    <div class="live-updates-toast" id="liveUpdates">
+        <div class="updates-header">
+            <h4>
+                <i class="fas fa-circle-notch fa-spin"></i> Live Updates
+            </h4>
+            <button onclick="document.getElementById('liveUpdates').style.display='none';">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="updates-list">
+            <div class="update-item">
+                <span class="update-time">09:45 AM</span>
+                <span>Delivery in progress - 45% completed</span>
+            </div>
+            <div class="update-item">
+                <span class="update-time">09:30 AM</span>
+                <span>Vehicle on route - no delays detected</span>
+            </div>
+            <div class="update-item">
+                <span class="update-time">09:15 AM</span>
+                <span>Picked up from warehouse</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 AI Delivery Delay Predictor. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>

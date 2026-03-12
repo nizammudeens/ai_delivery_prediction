@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>DeliveryAI</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="prediction.html" class="nav-link active">Predict</a>
+                <a href="map.html" class="nav-link">Track</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="result-container">
+        <!-- Header -->
+        <section class="result-header">
+            <div class="back-button">
+                <a href="prediction.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> New Prediction
+                </a>
+            </div>
+            <h1>Prediction Results</h1>
+            <p class="subtitle">AI-Powered Delivery Delay Analysis</p>
+        </section>
+
+        <!-- Main Results Grid -->
+        <section class="results-grid">
+            <!-- Status Indicator -->
+            <div class="result-card status-card on-time" id="statusCard">
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="status-light on-time"></div>
+                    <div class="status-info">
+                        <p class="status-label">Delivery Status</p>
+                        <p class="status-value" id="statusValue">ON TIME</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estimated Delivery Time -->
+            <div class="result-card">
+                <div class="card-icon">
+                    <i class="fas fa-hourglass-end"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-label">Estimated Delivery Time</p>
+                    <p class="card-value" id="estimatedTime">--:-- --</p>
+                    <small id="deliveryDate">Date: --/--/----</small>
+                </div>
+            </div>
+
+            <!-- Delay Probability -->
+            <div class="result-card">
+                <div class="card-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-label">Delay Probability</p>
+                    <p class="card-value" id="delayProbability">--%</p>
+                    <small id="probabilityDescription">Low risk</small>
+                </div>
+            </div>
+
+            <!-- Predicted Delay Duration -->
+            <div class="result-card">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <p class="card-label">Predicted Delay Duration</p>
+                    <p class="card-value" id="delayDuration">0 min</p>
+                    <small id="delayNote">Expected additional time</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Details Section -->
+        <section class="result-section">
+            <h2>Main Factors Affecting Delivery</h2>
+            <div class="factors-list">
+                <div class="factor-item traffic">
+                    <div class="factor-icon">
+                        <i class="fas fa-car-crash"></i>
+                    </div>
+                    <div class="factor-content">
+                        <h3>Traffic Conditions</h3>
+                        <div class="factor-bar">
+                            <div class="factor-fill" style="width: 65%;" id="trafficScore"></div>
+                        </div>
+                        <span class="factor-label" id="trafficLabel">65% Impact</span>
+                    </div>
+                </div>
+
+                <div class="factor-item weather">
+                    <div class="factor-icon">
+                        <i class="fas fa-cloud-rain"></i>
+                    </div>
+                    <div class="factor-content">
+                        <h3>Weather Conditions</h3>
+                        <div class="factor-bar">
+                            <div class="factor-fill" style="width: 35%;" id="weatherScore"></div>
+                        </div>
+                        <span class="factor-label" id="weatherLabel">35% Impact</span>
+                    </div>
+                </div>
+
+                <div class="factor-item warehouse">
+                    <div class="factor-icon">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <div class="factor-content">
+                        <h3>Warehouse Delay</h3>
+                        <div class="factor-bar">
+                            <div class="factor-fill" style="width: 45%;" id="warehouseScore"></div>
+                        </div>
+                        <span class="factor-label" id="warehouseLabel">45% Impact</span>
+                    </div>
+                </div>
+
+                <div class="factor-item distance">
+                    <div class="factor-icon">
+                        <i class="fas fa-ruler"></i>
+                    </div>
+                    <div class="factor-content">
+                        <h3>Distance & Route</h3>
+                        <div class="factor-bar">
+                            <div class="factor-fill" style="width: 25%;" id="distanceScore"></div>
+                        </div>
+                        <span class="factor-label" id="distanceLabel">25% Impact</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-container">
+                <h3>Delay Risk Distribution</h3>
+                <canvas id="delayChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Factor Impact Analysis</h3>
+                <canvas id="factorChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Input Summary -->
+        <section class="result-section">
+            <h2>Delivery Details</h2>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <p class="detail-label">Vehicle Type</p>
+                    <p class="detail-value" id="detailVehicle">--</p>
+                </div>
+                <div class="detail-item">
+                    <p class="detail-label">Distance</p>
+                    <p class="detail-value" id="detailDistance">-- km</p>
+                </div>
+                <div class="detail-item">
+                    <p class="detail-label">Traffic Level</p>
+                    <p class="detail-value" id="detailTraffic">--</p>
+                </div>
+                <div class="detail-item">
+                    <p class="detail-label">Weather</p>
+                    <p class="detail-value" id="detailWeather">--</p>
+                </div>
+                <div class="detail-item">
+                    <p class="detail-label">Warehouse Delay</p>
+                    <p class="detail-value" id="detailWarehouse">-- min</p>
+                </div>
+                <div class="detail-item">
+                    <p class="detail-label">Departure Time</p>
+                    <p class="detail-value" id="detailDeparture">--:--</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendation Section -->
+        <section class="result-section recommendation">
+            <h2><i class="fas fa-lightbulb"></i> Recommendations</h2>
+            <ul class="recommendations-list" id="recommendationsList">
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Monitor traffic conditions before departure</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Consider alternative routes during peak hours</span>
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>Account for weather impact on delivery time</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="result-actions">
+            <button class="btn btn-primary" onclick="window.location.href='prediction.html'">
+                <i class="fas fa-redo"></i> New Prediction
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='map.html'">
+                <i class="fas fa-map"></i> View Map
+            </button>
+            <button class="btn btn-secondary" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Results
+            </button>
+        </section>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast">
+        <div class="toast-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="toastMessage">Results loaded successfully</span>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.style.display='none';">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <p>AI Delivery Delay Predictor optimizes logistics operations.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="prediction.html">Predict</a></li>
+                    <li><a href="map.html">Track</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AI Delivery Delay Predictor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/result.js"></script>
+</body>
+</html>

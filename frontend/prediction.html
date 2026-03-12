@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Delivery Delay</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>DeliveryAI</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="prediction.html" class="nav-link active">Predict</a>
+                <a href="map.html" class="nav-link">Track</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="prediction-container">
+        <!-- Prediction Form -->
+        <section class="prediction-section">
+            <h1>Delivery Delay Predictor</h1>
+            <p class="subtitle">Enter your delivery details for accurate AI predictions</p>
+            
+            <form id="predictionForm" class="prediction-form" onsubmit="handlePrediction(event)">
+                <div class="form-grid">
+                    <!-- Vehicle Type -->
+                    <div class="form-group">
+                        <label for="vehicleType">
+                            <i class="fas fa-truck"></i> Vehicle Type *
+                        </label>
+                        <select id="vehicleType" name="vehicleType" required>
+                            <option value="">Select Vehicle Type</option>
+                            <option value="truck">🚚 Truck (Heavy Cargo)</option>
+                            <option value="car">🚗 Car (Regular Delivery)</option>
+                            <option value="bike">🏍️ Motorcycle (Quick Delivery)</option>
+                            <option value="ship">🚢 Ship (Maritime)</option>
+                            <option value="airplane">✈️ Airplane (Air Freight)</option>
+                        </select>
+                    </div>
+
+                    <!-- Distance -->
+                    <div class="form-group">
+                        <label for="distance">
+                            <i class="fas fa-ruler"></i> Distance (km) *
+                        </label>
+                        <input type="number" id="distance" name="distance" placeholder="e.g., 150" min="1" max="5000" step="1" required>
+                        <small>Enter distance in kilometers</small>
+                    </div>
+
+                    <!-- Traffic Level -->
+                    <div class="form-group">
+                        <label for="trafficLevel">
+                            <i class="fas fa-car-crash"></i> Traffic Level *
+                        </label>
+                        <select id="trafficLevel" name="trafficLevel" required>
+                            <option value="">Select Traffic Condition</option>
+                            <option value="1">🟢 Light (1-3)</option>
+                            <option value="2">🟡 Moderate (4-6)</option>
+                            <option value="3">🔴 Heavy (7-9)</option>
+                            <option value="4">⛔ Congested (10)</option>
+                        </select>
+                    </div>
+
+                    <!-- Weather Condition -->
+                    <div class="form-group">
+                        <label for="weatherCondition">
+                            <i class="fas fa-cloud"></i> Weather Condition *
+                        </label>
+                        <select id="weatherCondition" name="weatherCondition" required>
+                            <option value="">Select Weather</option>
+                            <option value="1">☀️ Clear/Sunny</option>
+                            <option value="2">⛅ Cloudy</option>
+                            <option value="3">🌧️ Rainy</option>
+                            <option value="4">❄️ Snowy</option>
+                            <option value="5">⛈️ Stormy</option>
+                        </select>
+                    </div>
+
+                    <!-- Warehouse Delay -->
+                    <div class="form-group">
+                        <label for="warehouseDelay">
+                            <i class="fas fa-warehouse"></i> Warehouse Delay (minutes) *
+                        </label>
+                        <input type="number" id="warehouseDelay" name="warehouseDelay" placeholder="e.g., 30" min="0" max="1440" step="1" required>
+                        <small>Expected delay at warehouse</small>
+                    </div>
+
+                    <!-- Departure Time -->
+                    <div class="form-group">
+                        <label for="departureTime">
+                            <i class="fas fa-clock"></i> Departure Time *
+                        </label>
+                        <input type="time" id="departureTime" name="departureTime" required>
+                    </div>
+                </div>
+
+                <!-- Additional Options -->
+                <div class="form-section">
+                    <h3>Additional Information (Optional)</h3>
+                    <div class="form-grid">
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" name="isPeakHours" id="isPeakHours">
+                                <span>Peak Hours</span>
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" name="isHoliday" id="isHoliday">
+                                <span>Holiday/Weekend</span>
+                            </label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" name="hasUrgentOrders" id="hasUrgentOrders">
+                                <span>Urgent Orders</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    <i class="fas fa-brain"></i> Predict Delay
+                </button>
+            </form>
+        </section>
+
+        <!-- Statistics Sidebar -->
+        <section class="stats-sidebar">
+            <h3>Quick Stats</h3>
+            <div class="stat-card">
+                <div class="stat-number">98.5%</div>
+                <div class="stat-label">Prediction Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Deliveries Analyzed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">25%</div>
+                <div class="stat-label">Avg Delay Reduction</div>
+            </div>
+
+            <h3 style="margin-top: 30px;">Tips for Better Predictions</h3>
+            <ul class="tips-list">
+                <li><i class="fas fa-check-circle"></i> Provide accurate vehicle type</li>
+                <li><i class="fas fa-check-circle"></i> Check real-time traffic conditions</li>
+                <li><i class="fas fa-check-circle"></i> Consider weather forecasts</li>
+                <li><i class="fas fa-check-circle"></i> Include warehouse processing time</li>
+                <li><i class="fas fa-check-circle"></i> Mark peak hours if applicable</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Loading Overlay (shown during prediction) -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <p>Analyzing traffic and weather data using AI...</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <p>AI Delivery Delay Predictor helps optimize logistics operations.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html">Track</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AI Delivery Delay Predictor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/prediction.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</body>
+</html>

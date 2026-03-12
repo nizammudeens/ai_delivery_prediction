@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading - AI Delivery Delay Predictor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="loading-page">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>DeliveryAI</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="prediction.html" class="nav-link">Predict</a>
+                <a href="map.html" class="nav-link">Track</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Content -->
+    <div class="loading-wrapper">
+        <div class="loading-container animated">
+            <!-- Main Spinner -->
+            <div class="spinner-wrapper">
+                <div class="spinner"></div>
+                <div class="spinner-text"></div>
+            </div>
+
+            <!-- Main Message -->
+            <h1 class="loading-title">Analyzing Delivery Data</h1>
+            <p class="loading-message">
+                Analyzing traffic and weather data using AI…
+            </p>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-percent">
+                    <span id="progressText">0%</span>
+                </div>
+            </div>
+
+            <!-- Processing Steps -->
+            <div class="processing-steps">
+                <div class="step-item active">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Fetching Real-Time Traffic Data</span>
+                </div>
+                <div class="step-item in-progress">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Analyzing Weather Conditions</span>
+                </div>
+                <div class="step-item">
+                    <i class="fas fa-circle"></i>
+                    <span>Processing Warehouse Metrics</span>
+                </div>
+                <div class="step-item">
+                    <i class="fas fa-circle"></i>
+                    <span>Running ML Prediction Model</span>
+                </div>
+                <div class="step-item">
+                    <i class="fas fa-circle"></i>
+                    <span>Generating Results</span>
+                </div>
+            </div>
+
+            <!-- Sub-text -->
+            <p class="loading-subtext">
+                This typically takes 2-5 seconds. You'll be redirected to results automatically.
+            </p>
+        </div>
+
+        <!-- Alternative Animation -->
+        <div class="data-visualization">
+            <div class="data-item">
+                <i class="fas fa-wifi"></i>
+                <span>Traffic</span>
+            </div>
+            <div class="data-item">
+                <i class="fas fa-cloud"></i>
+                <span>Weather</span>
+            </div>
+            <div class="data-item">
+                <i class="fas fa-location-dot"></i>
+                <span>Route</span>
+            </div>
+            <div class="data-item">
+                <i class="fas fa-warehouse"></i>
+                <span>Warehouse</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 AI Delivery Delay Predictor.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Simulate loading progress
+        let progress = 0;
+        const progressFill = document.querySelector('.progress-fill');
+        const progressText = document.getElementById('progressText');
+        const steps = document.querySelectorAll('.step-item');
+
+        function updateProgress() {
+            if (progress < 100) {
+                progress += Math.random() * 30;
+                if (progress > 100) progress = 100;
+                
+                progressFill.style.width = progress + '%';
+                progressText.textContent = Math.floor(progress) + '%';
+
+                // Update steps
+                const stepIndex = Math.floor((progress / 100) * steps.length);
+                steps.forEach((step, index) => {
+                    if (index < stepIndex) {
+                        step.classList.remove('in-progress');
+                        step.classList.add('active');
+                        step.querySelector('i').className = 'fas fa-check-circle';
+                    } else if (index === stepIndex) {
+                        step.classList.add('in-progress');
+                        step.querySelector('i').className = 'fas fa-spinner fa-spin';
+                    }
+                });
+
+                setTimeout(updateProgress, 500 + Math.random() * 1000);
+            } else {
+                // Redirect to results after loading completes
+                setTimeout(() => {
+                    window.location.href = 'result.html';
+                }, 1000);
+            }
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>
