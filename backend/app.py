@@ -373,10 +373,16 @@ def handle_preflight():
 
 
 if __name__ == '__main__':
+    # Get port from environment variable or use default for development
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Determine if in production
+    is_production = os.environ.get('FLASK_ENV') == 'production'
+    
     # Development server
     app.run(
         host='0.0.0.0',
-        port=5000,
-        debug=True,
-        use_reloader=True
+        port=port,
+        debug=not is_production,
+        use_reloader=not is_production
     )

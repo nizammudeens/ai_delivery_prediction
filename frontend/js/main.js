@@ -146,8 +146,18 @@ function validateForm(formId) {
 // API COMMUNICATION
 // ============================================
 
+// Detect API URL based on environment
+const getAPIUrl = () => {
+    // If running locally on port 8000 (frontend dev server), use localhost backend
+    if (window.location.hostname === 'localhost' && window.location.port === '8000') {
+        return 'http://localhost:5000/api';
+    }
+    // For production on Render or same domain, use relative path
+    return '/api';
+};
+
 const API = {
-    baseURL: 'http://localhost:5000/api',
+    baseURL: getAPIUrl(),
 
     // Make prediction
     predictDelay: async function(data) {
